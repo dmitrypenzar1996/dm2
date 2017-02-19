@@ -1,0 +1,25 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+import numpy as np
+from nn.output_layer import OutputLayer
+
+
+class MSE(OutputLayer):
+    def map_func(self, X):
+        return np.mean((X - self.answer) ** 2)
+
+    def get_x_grad(self, X):
+        return 2 * (X - self.answer) / X.size
+
+    def update_grad_input(self, answer):
+        self.answer = answer
+        self.grad_input = - self.get_x_grad(answer)  # we want to minimize mse
+        return self.grad_input
+
+if __name__ == "__main__":
+    answer = np.random.randn(10)
+    X = np.random.randn(10)
+    model = MSE(10)
+    model.set_answer(answer)
+    model.check_gradient(X)
