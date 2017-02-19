@@ -7,11 +7,11 @@ from nn.output_layer import OutputLayer
 
 class NegativeLogLikelihood(OutputLayer):
     def map_func(self, X):
-        return -((1 - self.answer) * np.log(1 - X) +
-                  self.answer * np.log(X)).sum()
+        return -(self.answer * np.log(X)).sum()
 
     def get_x_grad(self, X):
-        return (self.answer - X) / (X - 1) / X
+        return -self.answer / X
+
 
 if __name__ == "__main__":
     X = np.abs(0.25 * np.random.randn(10))
