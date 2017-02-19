@@ -16,16 +16,19 @@ class CrossEntropy(OutputLayer):
                   self.answer * np.log(X)).sum()
 
     def get_x_grad(self, X):
-        return self.softmax(X) - self.answer
+        fx = self.softmax(X)
 
-    def check_gradient(self, X, epsilon=1e-12, rtol=1e-4, atol=0.5):
+        return np.dot(((self.answer - fx) / (fx - 1) / fx),
+        (np.diag(fx) - np.dot(fx.reshape(*(fx.shape + (1,))),
+                         fx.reshape(1, *fx.shape))))
+
+    def check_gradient(self, X, epsilon=1e-4, rtol=1e-4, atol=1e-1):
         super(CrossEntropy, self).check_gradient(X, epsilon = epsilon, rtol = rtol, atol = atol)
 
 if __name__ == "__main__":
     X = np.abs(0.25 * np.random.randn(10))
     X[X>=1] = 0.5
     X[X<=0] = 0.25
-    print (np.log(1 - X))
     Y = np.zeros(10)
     Y[0] = 1
     model = CrossEntropy(10)
