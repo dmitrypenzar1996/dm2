@@ -10,6 +10,7 @@ class OutputLayer(Module):
         self.grad_input = None
         self.in_data = None
         self.output = None
+        self.answer = None
 
     def forward(self, in_data):
         self.in_data = in_data
@@ -18,7 +19,7 @@ class OutputLayer(Module):
 
     def update_grad_input(self, answer):
         self.answer = answer
-        self.grad_input = - self.get_x_grad(answer)  # we want to minimize mse
+        self.grad_input = - self.get_x_grad(self.in_data)  # we want to minimize
         return self.grad_input
 
     def get_analytic_gradient(self, X):

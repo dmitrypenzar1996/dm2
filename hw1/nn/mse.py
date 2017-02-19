@@ -12,11 +12,6 @@ class MSE(OutputLayer):
     def get_x_grad(self, X):
         return 2 * (X - self.answer) / X.size
 
-    def update_grad_input(self, answer):
-        self.answer = answer
-        self.grad_input = - self.get_x_grad(answer)  # we want to minimize mse
-        return self.grad_input
-
 if __name__ == "__main__":
     answer = np.random.randn(10)
     X = np.random.randn(10)

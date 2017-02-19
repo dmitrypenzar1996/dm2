@@ -28,15 +28,15 @@ class Sequential(Module):
 
         self.layer.remove(module)
 
-    def forward(self, in_data):
+    def forward(self, in_data, answer):
+        self.layer[-1].set_answer(answer)
         for layer in self.layer:
             in_data = layer.forward(in_data)
         self.output = in_data
         return self.output
 
     def update_grad_input(self, answer):
-        init_input = answer # pass E matrix
-
+        init_input = answer
         for layer in self.layer[::-1]:
             init_input = layer.update_grad_input(init_input)
 

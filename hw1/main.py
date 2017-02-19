@@ -22,11 +22,11 @@ def main():
     model.add(nn.Linear(5, 10))
     model.add(nn.Tanh(10))
     model.add(nn.Linear(10,10))
-    model.add(nn.MSE(10, Y))
+    model.add(nn.MSE(10))
 
     for i in xrange(1000000):
-        print ("Loss", model.forward(X))
-        model.backward()
+        print ("Loss", model.forward(X, Y))
+        model.backward(Y)
 
 
 if __name__ == '__main__':

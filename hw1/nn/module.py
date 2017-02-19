@@ -10,11 +10,12 @@ class Module(object):
     init_sigma = 0.001
     init_mu = 0.01
 
-    def __init__(self, n=0, m=0):
+    def __init__(self, n=0, m=0, batch_size = 1):
         self.output = None
         self.grad_input = None
         self.in_shape = (n, ) if type(n) is int else n
         self.out_shape = (m, ) if type(m) is int else m
+
 
     def map_func(self, *args, **kwargs):
         raise NotImplementedError('implement map func of layer!')
