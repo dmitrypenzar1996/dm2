@@ -11,10 +11,13 @@ class LogSoftMax(Activation):  # Computes hyperbolic tangent of x element-wise
         return X - add
 
     def get_x_grad(self, X):
-        Y = np.exp(X)
-        return np.diag(1 - (Y / (Y.sum())))
+        fx = np.exp(X)
+        fx = fx / fx.sum()
+        return np.diag(np.ones(X.shape)) - fx.reshape(* (fx.shape + (1,))) #np.dot(fx.reshape(*(fx.shape + (1,))),
+                                 #   fx.reshape(1, *fx.shape))
+        #return np.diag(1 - (Y / (Y.sum())))
 
-    def check_gradient(self, X, epsilon=1e-12, rtol=1e-4, atol=0.5):
+    def check_gradient(self, X, epsilon=1e-12, rtol=1e-4, atol=1e-2):
         super(LogSoftMax, self).check_gradient(X, epsilon = epsilon, rtol = rtol, atol = atol)
 
 if __name__ == "__main__":
