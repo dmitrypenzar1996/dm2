@@ -13,12 +13,15 @@ class Sigmoid(Activation):
     def get_x_grad(self, X):
         fx = self.map_func(X)
         if len(X.shape) != 1:
-            grad = np.zeros(X.shape)
+            grad = np.zeros(X.shape + (X.shape[1],))
+            for i in xrange(X.shape[0]):
+                grad[i] = np.diag(fx[i] * (1 - fx[i]))
+            return grad
         else:
             return np.diag(fx * (1 - fx))
 
 
 if __name__ == "__main__":
-    X = np.random.randn(10)
+    X = np.random.randn(3, 10)
     model = Sigmoid(10)
     model.check_gradient(X)

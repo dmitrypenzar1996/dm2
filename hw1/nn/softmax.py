@@ -31,6 +31,6 @@ class SoftMax(Activation): # Computes hyperbolic tangent of x element-wise
 
 
 if __name__ == "__main__":
-    X = np.random.randn(10)
+    X = np.random.randn(100, 10)
     model = SoftMax(10)
     model.check_gradient(X)

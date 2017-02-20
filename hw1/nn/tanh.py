@@ -13,7 +13,7 @@ class Tanh(Activation): # Computes hyperbolic tangent of x element-wise
         if len(X.shape) == 1:
             return np.diag(1 - (np.tanh(X) ** 2))
         else:
-            grad = np.zeros(shape = (X.shape[0], X.shape[1], X.shape[1]))
+            grad = np.zeros(X.shape + (X.shape[1],))
             for i in xrange(X.shape[0]):
                 grad[i] = np.diag(1 - (np.tanh(X[i]) ** 2))
             return grad

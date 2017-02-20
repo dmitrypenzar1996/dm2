@@ -43,7 +43,10 @@ class Module(object):
                     if p_name != 'X':
                         num_grad[i] = cur_value.mean(axis=0) / (epsilon * 2)
                     else:
-                        num_grad[i] = cur_value[i[0]] / (epsilon * 2)
+                        if self.out_shape != (1,):
+                            num_grad[i] = cur_value[i[0]] / (epsilon * 2)
+                        else:
+                            num_grad[i] = cur_value / (epsilon * 2)
                 else:
                     num_grad[i] = cur_value / (epsilon * 2)
                 p_value += epsilon
@@ -57,7 +60,7 @@ class Module(object):
         raise NotImplementedError('get_params')
 
     def check_gradient(self, X, epsilon = 1e-10, rtol = 1e-4, atol = None):
-        atol = atol or rtol * 10
+        atol = atol or rtol * 100
 
         sys.stdout.write("Start checking\n")
 
