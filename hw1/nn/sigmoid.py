@@ -12,7 +12,10 @@ class Sigmoid(Activation):
 
     def get_x_grad(self, X):
         fx = self.map_func(X)
-        return np.diag(fx * (1 - fx))
+        if len(X.shape) != 1:
+            grad = np.zeros(X.shape)
+        else:
+            return np.diag(fx * (1 - fx))
 
 
 if __name__ == "__main__":

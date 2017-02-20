@@ -9,11 +9,13 @@ class SoftMax(Activation): # Computes hyperbolic tangent of x element-wise
     def map_func(self, X):
         Y = np.exp(X)
         if len(X.shape) > 1:
-            return Y / Y.sum(axis=0, keepdims=True)
+            return Y / Y.sum(axis=1, keepdims=True)
+
         return Y / Y.sum()
 
     def get_x_grad(self, X):
         fx = self.map_func(X)
+
         if len(X.shape) > 1:
             grad = np.zeros(X.shape + (X.shape[1],))
             for i in xrange(X.shape[0]):
