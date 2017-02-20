@@ -7,7 +7,7 @@ from itertools import product
 
 
 class Module(object):
-    init_sigma = 0.00001
+    init_sigma = 0.01
     init_mu = 0
 
     def __init__(self, n=0, m=0, batch_size = 1):

@@ -28,11 +28,17 @@ class Sequential(Module):
 
         self.layer.remove(module)
 
-    def forward(self, in_data, answer):
-        self.layer[-1].set_answer(answer)
-        for layer in self.layer:
-            in_data = layer.forward(in_data)
-        self.output = in_data
+    def forward(self, in_data, answer = None):
+        if not answer is None:
+            self.layer[-1].set_answer(answer)
+            for layer in self.layer:
+                in_data = layer.forward(in_data)
+            self.output = in_data
+        else:
+            for layer in self.layer[:-1]:
+                in_data = layer.forward(in_data)
+            self.output = in_data
+
         return self.output
 
     def update_grad_input(self, answer):
