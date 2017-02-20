@@ -25,9 +25,9 @@ class Linear(Module):
     def update_grad_input(self, grad_next):
         self.grad_next = grad_next
         if len(self.in_data.shape) != 1:
-            self.grad_input = np.matmul(self.grad_next, self.get_x_grad(self.in_data)).sum(axis=-1)
+            self.grad_input = np.matmul(self.get_x_grad(self.in_data), self.grad_next).sum(axis=-1)
         else:
-            self.grad_input = np.matmul(self.grad_next.T, self.get_x_grad(self.in_data))
+            self.grad_input = np.matmul(self.get_x_grad(self.in_data), self.grad_next)
         return self.grad_input
 
     def update_parameters(self, alpha=1e-5):
