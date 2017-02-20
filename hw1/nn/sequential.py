@@ -40,8 +40,12 @@ class Sequential(Module):
         for layer in self.layer[::-1]:
             init_input = layer.update_grad_input(init_input)
 
-    def update_parameters(self, *args, **kwargs):
+    def update_parameters(self, alpha = 0.01):
         for layer in self.layer:
-            layer.update_parameters()
+            layer.update_parameters(alpha = alpha)
+
+    def backward(self, answer, alpha = 0.1):
+        self.update_grad_input(answer)
+        self.update_parameters(alpha)
         # that's fine not to implement this method
         # module may have not parameters (for example - MSE criterion)

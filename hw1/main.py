@@ -23,12 +23,9 @@ def main():
     model.add(nn.Linear(10, 10))
     model.add(nn.MSE(10))
 
-    j = 0
     for i in xrange(1000000):
-        print("X shape", X.shape)
-
         print ("Loss", model.forward(X, Y))
-        model.backward(Y)
+        model.backward(Y, alpha = 0.5)
 
 
 if __name__ == '__main__':

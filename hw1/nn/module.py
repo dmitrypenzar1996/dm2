@@ -7,8 +7,8 @@ from itertools import product
 
 
 class Module(object):
-    init_sigma = 0.001
-    init_mu = 0.01
+    init_sigma = 0.00001
+    init_mu = 0
 
     def __init__(self, n=0, m=0, batch_size = 1):
         self.output = None
@@ -79,6 +79,10 @@ class Module(object):
                 print ("Analytical: ")
                 print(an_grad[key])
                 sys.stdout.write("Fail\n")
+            print("Numerical: ")
+            print(num_grad[key])
+            print("Analytical: ")
+            print(an_grad[key])
         sys.stdout.write("Done\n")
 
     def forward(self, *args, **kwargs):
