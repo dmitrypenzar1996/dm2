@@ -13,8 +13,8 @@ class MSE(OutputLayer):
         return 2 * (X - self.answer) / X.size
 
 if __name__ == "__main__":
-    answer = np.random.randn(10)
-    X = np.random.randn(10)
+    answer = np.random.randn(5,10)
+    X = np.random.randn(5,10)
     model = MSE(10)
     model.set_answer(answer)
     model.check_gradient(X)

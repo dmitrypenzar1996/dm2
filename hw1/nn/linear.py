@@ -15,36 +15,44 @@ class Linear(Module):
         self.in_data = None
 
     def map_func(self, X, weights, bias):
-        return np.dot(weights, X) + bias
+        return np.dot(weights, X.T).T + bias
 
     def forward(self, in_data):
         self.in_data = in_data
+        print("Hi", self.weights.shape)
+        print (self.in_data.shape)
         self.output = self.map_func(self.in_data, self.weights, self.bias)
         return self.output
 
     def update_grad_input(self, grad_next):
         self.grad_next = grad_next
-        self.grad_input = np.matmul(self.get_x_grad(), self.grad_next)
-
+        self.grad_input = np.matmul(self.get_x_grad(self.in_data), self.grad_next.T).sum(axis=-1)
         return self.grad_input
 
-    def update_parameters(self, alpha=1e-2):
-        self.bias += alpha * np.matmul(self.get_bias_grad(), self.grad_next)
-        self.weights += alpha * np.matmul(self.get_weights_grad(self.in_data), self.grad_next)
-
+    def update_parameters(self, alpha=1e-10):
+        if len(self.in_data.shape) != 1:
+            self.bias += alpha * (np.matmul(self.get_bias_grad(), self.grad_next.T)).mean(axis=-1)
+            self.weights += alpha * (np.matmul(self.get_weights_grad(self.in_data), self.grad_next.T).mean(axis=-1))
+        else:
+            self.bias += alpha * (np.matmul(self.get_bias_grad(), self.grad_next.T))
+            self.weights += alpha * (np.matmul(self.get_weights_grad(self.in_data), self.grad_next.T))
 
     def get_weights_grad(self, X):
         weights_grad = np.zeros(shape =\
                 self.out_shape + self.in_shape + self.out_shape)
         for i in range(self.out_shape[0]):
-            weights_grad[i, :, i] = X
+            weights_grad[i, :, i] = X.mean(axis = 0)
         return weights_grad
 
     def get_bias_grad(self):
         return np.diag(np.ones(self.bias.shape))
 
-    def get_x_grad(self):
-        return self.weights.T
+    def get_x_grad(self, X):
+        if len(X.shape) == 1:
+            return self.weights.T
+        else:
+            return np.repeat(np.expand_dims(self.weights.T, axis = 0), X.shape[0], axis = 0)
+
 
     def get_params(self):
         return {'weights': self.weights, 'bias': self.bias}
@@ -52,10 +60,10 @@ class Linear(Module):
     def get_analytic_gradient(self, X):
         return {'weights': self.get_weights_grad(X),
                 'bias': self.get_bias_grad(),
-                    'X': self.get_x_grad()}
+                    'X': self.get_x_grad(X)}
 
 
 if __name__ == "__main__":
-    X = np.random.randn(10)
+    X = np.random.randn(3, 10)
     a = Linear(10, 10)
     a.check_gradient(X)

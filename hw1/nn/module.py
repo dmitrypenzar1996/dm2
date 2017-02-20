@@ -26,6 +26,8 @@ class Module(object):
 
     def get_numeric_gradient(self, epsilon, **kwargs):
         all_num_grad = {}
+
+        is_batch = len(kwargs['X'].shape) > 1
         for p_name, p_value in kwargs.iteritems():
             if self.out_shape != (1,):
                 num_grad = np.zeros(shape = p_value.shape + self.out_shape)
@@ -37,7 +39,13 @@ class Module(object):
                 cur_value = self.map_func(**kwargs)
                 p_value[i] -= 2 * epsilon
                 cur_value -= self.map_func(**kwargs)
-                num_grad[i] = cur_value / (epsilon * 2)
+                if is_batch:
+                    if p_name != 'X':
+                        num_grad[i] = cur_value.mean(axis=0) / (epsilon * 2)
+                    else:
+                        num_grad[i] = cur_value[i[0]] / (epsilon * 2)
+                else:
+                    num_grad[i] = cur_value / (epsilon * 2)
                 p_value += epsilon
             all_num_grad[p_name] = num_grad
         return all_num_grad
