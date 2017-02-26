@@ -6,11 +6,11 @@ from nn.output_layer import OutputLayer
 
 
 class NegativeLogLikelihood(OutputLayer):
-    def map_func(self, X):
-        return -(self.answer * np.log(X)).sum()
+    def map_func(self, X, answer):
+        return - (answer * np.log(X)).sum()
 
-    def get_x_grad(self, X):
-        return -self.answer / X
+    def get_x_grad(self, X, answer):
+        return - answer / X
 
 
 if __name__ == "__main__":
@@ -23,4 +23,4 @@ if __name__ == "__main__":
     Y[2][2] = 1
     model = NegativeLogLikelihood(10)
     model.set_answer(Y)
-    model.check_gradient(X)
+    model.check_gradient(X, Y)

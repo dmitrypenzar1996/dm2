@@ -8,19 +8,13 @@ from nn.output_layer import OutputLayer
 class CrossEntropy(OutputLayer):
     def softmax(self, X):
         X = np.exp(X)
-        if len(X.shape) > 1:
-            return X / X.sum(axis=1, keepdims=True)
-        else:
-            return X / X.sum()
+        return X / X.sum(axis=-1, keepdims=True)
 
-    def map_func(self, X):
-        return -(self.answer * np.log(self.softmax(X))).sum()
+    def map_func(self, X, answer):
+        return -(answer * np.log(self.softmax(X))).sum()
 
-    def get_x_grad(self, X):
-        return self.softmax(X) - self.answer
-
-    def check_gradient(self, X, epsilon=1e-4, rtol=1e-4, atol=1e-1):
-        super(CrossEntropy, self).check_gradient(X, epsilon = epsilon, rtol = rtol, atol = atol)
+    def get_x_grad(self, X, Y):
+        return self.softmax(X) - Y
 
 if __name__ == "__main__":
     X = np.abs(0.25 * np.random.randn(3, 10))
@@ -32,4 +26,4 @@ if __name__ == "__main__":
     Y[2][2] = 1
     model = CrossEntropy(10)
     model.set_answer(Y)
-    model.check_gradient(X)
+    model.check_gradient(X, Y)

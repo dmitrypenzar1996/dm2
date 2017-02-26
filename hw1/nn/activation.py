@@ -11,6 +11,7 @@ class Activation(Module):  # Computes hyperbolic tangent of x element-wise
         self.grad_input = None
         self.in_data = None
         self.output = None
+        self.grad_next = None
 
     def forward(self, in_data):
         self.in_data = in_data
@@ -18,13 +19,13 @@ class Activation(Module):  # Computes hyperbolic tangent of x element-wise
         return self.output
 
     def update_grad_input(self, grad_next):
-        self.grad_input = np.matmul(grad_next, self.get_x_grad(self.in_data))
-        if len(self.in_data.shape) != 1:
-            self.grad_input = self.grad_input.mean(axis=-1)
+        self.grad_next = grad_next
+        self.grad_input = self.get_x_grad(self.in_data, self.grad_next)
         return self.grad_input
 
-    def get_analytic_gradient(self, X):
-        return {"X": self.get_x_grad(X)}
+    def get_analytic_gradient(self, X, answer):
+        Y = self.loss_function_prime(self.forward(X), answer)
+        return {"X": self.get_x_grad(X, Y)}
 
     def get_params(self):
         return {}

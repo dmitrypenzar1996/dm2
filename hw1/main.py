@@ -23,9 +23,17 @@ def main():
     model.add(nn.Linear(10, 10))
     model.add(nn.MSE(10))
 
-    for i in xrange(1000000):
+    print("Batch mode")
+    for i in xrange(10000):
         print ("Loss", model.forward(X, Y))
-        model.backward(Y, alpha = 0.5)
+        model.backward(alpha = 0.1)
+
+    print("Single mode")
+    for i in xrange(10000):
+        for j in xrange(X.shape[0]):
+            print ("Loss", model.forward(X[j], Y[j]))
+            model.backward(alpha = 0.1)
+
 
 
 if __name__ == '__main__':

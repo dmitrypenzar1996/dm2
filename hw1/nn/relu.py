@@ -11,20 +11,13 @@ class Relu(Activation): # Computes hyperbolic tangent of x element-wise
         Y[Y < 0] = 0
         return Y
 
-    def get_x_grad(self, X):
-        Y = X.copy()
-        Y[Y < 0] = 0
-        Y[Y > 0] = 1
-        if len(X.shape) != 1:
-            grad = np.zeros(X.shape + (X.shape[1],))
-            for i in xrange(X.shape[0]):
-                grad[i] = np.diag(Y[i])
-            return grad
-        else:
-            return np.diag(Y)
-
+    def get_x_grad(self, X, Y):
+        Z = Y.copy()
+        Z[X < 0] = 0
+        return Z
 
 if __name__ == "__main__":
-    X = np.random.randn(100, 10)
+    X = np.random.randn(3, 10)# to avoid bad part of function
     model = Relu(10)
-    model.check_gradient(X)
+    answer = np.random.randn(3, 10)
+    model.check_gradient(X, answer)
